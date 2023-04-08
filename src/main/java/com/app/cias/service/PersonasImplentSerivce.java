@@ -52,12 +52,25 @@ public class PersonasImplentSerivce implements PersonaService{
 		return ResponseEntity.ok(actualizada);
 	}
 
-	@Override
+	/*@Override
 	public ResponseEntity<Map<String,Boolean>>  deletePersona(Long id) {
 		Persona personaVieja = repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+ id)));
 		
 		repositorio.delete(personaVieja);
+		
+		Map<String, Boolean> respuesta = new HashMap<>();
+		respuesta.put("eliminar",Boolean.TRUE);
+		return ResponseEntity.ok(respuesta);
+	}*///Lo comente porque si borra al usuario y lo que quiero es solo desactivarlo
+
+	@Override
+	public ResponseEntity<Map<String,Boolean>>  deletePersona(Long id) {
+		Persona personaVieja = repositorio.findById(id)
+				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+ id)));
+		
+		personaVieja.setEstatus("I");
+		repositorio.save(personaVieja);
 		
 		Map<String, Boolean> respuesta = new HashMap<>();
 		respuesta.put("eliminar",Boolean.TRUE);
