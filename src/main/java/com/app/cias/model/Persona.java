@@ -26,7 +26,10 @@ public class Persona {
 
 	@Column(name ="estatus", length = 1, nullable = false )
 	private String estatus;
-	
+	@Column(name ="email", length = 100, nullable = false)
+	private String email;
+	@Column(name ="password", nullable = false)
+	private String password;
 	@Column(name ="fecha_ins", nullable = false )
 	private ZonedDateTime fecha_ins;
 	
@@ -35,8 +38,7 @@ public class Persona {
 	
 	public Persona (){}
 
-	public Persona(Long id, String nombre, String primer_apellido,String segundo_apellido, String telefono, String estatus,
-			ZonedDateTime fecha_ins, ZonedDateTime fecha_upd) {
+	public Persona(Long id, String nombre, String primer_apellido, String segundo_apellido, String telefono, String estatus, String email, String password, ZonedDateTime fecha_ins, ZonedDateTime fecha_upd) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -44,17 +46,21 @@ public class Persona {
 		this.segundo_apellido = segundo_apellido;
 		this.telefono = telefono;
 		this.estatus = estatus;
+		this.email = email;
+		this.password = password;
 		this.fecha_ins = fecha_ins;
 		this.fecha_upd = fecha_upd;
 	}
 
-	public Persona(String nombre, String primer_apellido, String segundo_apellido, String telefono, String estatus, ZonedDateTime fecha_ins) {
+	public Persona(String nombre, String primer_apellido, String segundo_apellido, String telefono, String estatus, String email, String password, ZonedDateTime fecha_ins) {
 		super();
 		this.nombre = nombre;
 		this.primer_apellido = primer_apellido;
 		this.segundo_apellido = segundo_apellido;
 		this.telefono = telefono;
 		this.estatus = estatus;
+		this.email = email;
+		this.password = password;
 		this.fecha_ins = fecha_ins;
 	}
 
@@ -122,9 +128,20 @@ public class Persona {
 	public void setFecha_upd(ZonedDateTime fecha_upd) {
 		this.fecha_upd = fecha_upd;
 	}
-	
-	
-	
 
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

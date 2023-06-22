@@ -3,6 +3,9 @@ package com.app.cias.personas.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.app.cias.service.PersonasImplentSerivce;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +17,13 @@ import com.app.cias.model.*;
 @RequestMapping("/api/v1/")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PersonasController {
-
+	private final Logger log = LoggerFactory.getLogger(PersonasImplentSerivce.class);
 	@Autowired
 	private PersonaService servicio;
 	
 	@GetMapping("/personas")
 	public List<Persona> ListaAll(){
+		log.info("Get All Request");
 		return servicio.listAll();
 	}
 	
