@@ -3,6 +3,9 @@ package com.app.cias.service;
 import com.app.cias.excepciones.ResourceNotFoundException;
 import com.app.cias.model.Persona;
 import com.app.cias.repository.PersonaRepository;
+import com.app.cias.service.dtos.PersonaResponseDTO;
+import com.app.cias.service.mappers.PersonaMapper;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service()
 public class PersonasImplentSerivce implements PersonaService{
 	private final Logger log = LoggerFactory.getLogger(PersonasImplentSerivce.class);
 	@Autowired
 	private PersonaRepository repositorio;
+	private PersonaMapper mapper = Mappers.getMapper(PersonaMapper.class);
 
 	@Override
-	public List<Persona> listAll() {
-		return repositorio.findAll();
+	public List<PersonaResponseDTO> listAll() {
+		return repositorio.findAll().stream().map(p -> mapper.toResponseDTO(p) ).collect(Collectors.toList());
 	}
 
 	@Override

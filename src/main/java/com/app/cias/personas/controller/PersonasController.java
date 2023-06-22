@@ -1,17 +1,17 @@
 package com.app.cias.personas.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.app.cias.model.Persona;
+import com.app.cias.service.PersonaService;
 import com.app.cias.service.PersonasImplentSerivce;
+import com.app.cias.service.dtos.PersonaResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.app.cias.service.PersonaService;
-import com.app.cias.model.*;
+import java.util.List;
+import java.util.Map;
 
 @RestController()
 @RequestMapping("/api/v1/")
@@ -22,7 +22,7 @@ public class PersonasController {
 	private PersonaService servicio;
 	
 	@GetMapping("/personas")
-	public List<Persona> ListaAll(){
+	public List<PersonaResponseDTO> ListaAll(){
 		log.info("Get All Request");
 		return servicio.listAll();
 	}
