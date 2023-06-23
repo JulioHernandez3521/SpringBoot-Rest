@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController()
-@RequestMapping("/api/v1/")
-@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping("/api/v1")
 public class PersonasController {
 	private final Logger log = LoggerFactory.getLogger(PersonasImplentSerivce.class);
 	@Autowired
@@ -33,8 +32,8 @@ public class PersonasController {
 	}
 	
 	@GetMapping("/personas/{id}")
-	public ResponseEntity<Persona> getById(@PathVariable long id){
-		return servicio.getPersonaById(id);
+	public ResponseEntity<PersonaResponseDTO> getById(@PathVariable long id){
+		return servicio.findById(id);
 	}
 	
 	@PutMapping("/personas/{id}")

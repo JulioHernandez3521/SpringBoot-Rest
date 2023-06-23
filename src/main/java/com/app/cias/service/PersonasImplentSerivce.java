@@ -38,10 +38,10 @@ public class PersonasImplentSerivce implements PersonaService{
 	}
 
 	@Override
-	public ResponseEntity<Persona> getPersonaById(Long id) {
+	public ResponseEntity<PersonaResponseDTO> findById(Long id) {
 		Persona peson = repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+id)));
-		return ResponseEntity.ok(peson);
+		return ResponseEntity.ok(mapper.toResponseDTO(peson));
 	}
 
 	@Override

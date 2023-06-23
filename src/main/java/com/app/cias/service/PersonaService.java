@@ -12,7 +12,7 @@ import com.app.cias.model.*;
 public interface PersonaService {
 	 List<PersonaResponseDTO> listAll();
 	 Persona save(Persona persona);
-	 ResponseEntity<Persona>getPersonaById(Long id);
+	 ResponseEntity<PersonaResponseDTO>findById(Long id);
 	 ResponseEntity<Persona>updatePersona(Long id, Persona detalles);
 	 ResponseEntity<Map<String,Boolean>>  deletePersona(Long id);
 	 Optional<Persona>  findByEmail (String email);
