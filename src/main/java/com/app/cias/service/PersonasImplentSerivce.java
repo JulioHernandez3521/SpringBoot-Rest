@@ -63,6 +63,10 @@ public class PersonasImplentSerivce implements PersonaService{
 		personaVieja.setSegundo_apellido(detalles.getSegundo_apellido());
 		personaVieja.setTelefono(detalles.getTelefono());
 		personaVieja.setFecha_upd(ZonedDateTime.now());
+		personaVieja.setEmail(detalles.getEmail());
+
+		if(detalles.getPassword() != null &&  !detalles.getPassword().isEmpty())
+			personaVieja.setPassword(bCryptPasswordEncoder.encode(detalles.getPassword()));
 
 		Persona actualizada = this.repositorio.save(personaVieja);
 		return ResponseEntity.ok(actualizada);
