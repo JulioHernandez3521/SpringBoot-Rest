@@ -30,8 +30,8 @@ public class Persona {
 	private String email;
 	@Column(name ="password", nullable = false)
 	private String password;
-	@Column(name ="fecha_ins", nullable = false )
-	private ZonedDateTime fecha_ins;
+	@Column(name ="fecha_ins")
+	private ZonedDateTime fecha_ins = ZonedDateTime.now();
 	
 	@Column(name ="fecha_upd", nullable = true )
 	private ZonedDateTime fecha_upd;

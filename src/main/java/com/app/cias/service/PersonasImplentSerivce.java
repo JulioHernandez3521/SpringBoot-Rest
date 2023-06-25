@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
@@ -22,31 +23,38 @@ import java.util.stream.Collectors;
 @Service()
 public class PersonasImplentSerivce implements PersonaService{
 	private final Logger log = LoggerFactory.getLogger(PersonasImplentSerivce.class);
-	@Autowired
-	private PersonaRepository repositorio;
-	private PersonaMapper mapper = Mappers.getMapper(PersonaMapper.class);
+	private final PersonaRepository repositorio;
+	private final PersonaMapper mapper;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	public PersonasImplentSerivce(PersonaRepository repositorio, PersonaMapper mapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.repositorio = repositorio;
+		this.mapper = mapper;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
 
 	@Override
 	public List<PersonaResponseDTO> listAll() {
-		return repositorio.findAll().stream().map(p -> mapper.toResponseDTO(p) ).collect(Collectors.toList());
+		return this.repositorio.findAll().stream().map(this.mapper::toResponseDTO).collect(Collectors.toList());
 	}
 
 	@Override
 	public Persona save(Persona persona) {
 		// TODO Auto-generated method stub
-		return repositorio.save(persona);
+		persona.setPassword(bCryptPasswordEncoder.encode(persona.getPassword()));
+		return this.repositorio.save(persona);
 	}
 
 	@Override
 	public ResponseEntity<PersonaResponseDTO> findById(Long id) {
-		Persona peson = repositorio.findById(id)
+		Persona peson = this.repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+id)));
-		return ResponseEntity.ok(mapper.toResponseDTO(peson));
+		return ResponseEntity.ok(this.mapper.toResponseDTO(peson));
 	}
 
 	@Override
 	public ResponseEntity<Persona> updatePersona(Long id, Persona detalles) {
-		Persona personaVieja = repositorio.findById(id)
+		Persona personaVieja = this.repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+id)));
 
 		personaVieja.setEstatus(detalles.getEstatus());
@@ -56,16 +64,16 @@ public class PersonasImplentSerivce implements PersonaService{
 		personaVieja.setTelefono(detalles.getTelefono());
 		personaVieja.setFecha_upd(ZonedDateTime.now());
 
-		Persona actualizada = repositorio.save(personaVieja);
+		Persona actualizada = this.repositorio.save(personaVieja);
 		return ResponseEntity.ok(actualizada);
 	}
 
     /*@Override
 	public ResponseEntity<Map<String,Boolean>>  deletePersona(Long id) {
-		Persona personaVieja = repositorio.findById(id)
+		Persona personaVieja = this.repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+ id)));
 		
-		repositorio.delete(personaVieja);
+		this.repositorio.delete(personaVieja);
 		
 		Map<String, Boolean> respuesta = new HashMap<>();
 		respuesta.put("eliminar",Boolean.TRUE);
@@ -74,11 +82,11 @@ public class PersonasImplentSerivce implements PersonaService{
 
 	@Override
 	public ResponseEntity<Map<String,Boolean>>  deletePersona(Long id) {
-		Persona personaVieja = repositorio.findById(id)
+		Persona personaVieja = this.repositorio.findById(id)
 				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+ id)));
 
 		personaVieja.setEstatus("I");
-		repositorio.save(personaVieja);
+		this.repositorio.save(personaVieja);
 
 		Map<String, Boolean> respuesta = new HashMap<>();
 		respuesta.put("eliminar",Boolean.TRUE);
