@@ -26,7 +26,7 @@ public class Persona {
 
 	@Column(name ="estatus", length = 1, nullable = false )
 	private String estatus;
-	@Column(name ="email", length = 100, nullable = false)
+	@Column(name ="email", length = 100, nullable = false, unique = true)
 	private String email;
 	@Column(name ="password", nullable = false)
 	private String password;

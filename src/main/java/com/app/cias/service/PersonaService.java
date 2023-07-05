@@ -10,11 +10,11 @@ import org.springframework.http.ResponseEntity;
 import com.app.cias.model.*;
 
 public interface PersonaService {
-	 List<PersonaResponseDTO> listAll();
-	 Persona save(Persona persona);
-	 ResponseEntity<PersonaResponseDTO>findById(Long id);
-	 ResponseEntity<Persona>updatePersona(Long id, Persona detalles);
-	 ResponseEntity<Map<String,Boolean>>  deletePersona(Long id);
-	 Optional<Persona>  findByEmail (String email);
+	 ResponseEntity<?> listAll();
+	 ResponseEntity<?> save(Persona persona);
+	 ResponseEntity<?>findById(Long id);
+	 ResponseEntity<?> updatePersona(Long id, Persona detalles);
+	 ResponseEntity<?>  deletePersona(Long id);
+	 Optional<?>  findByEmail (String email);
 	
 }

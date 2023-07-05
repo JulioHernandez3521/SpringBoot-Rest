@@ -1,14 +1,12 @@
 package com.app.cias.service;
 
-import com.app.cias.excepciones.ResourceNotFoundException;
 import com.app.cias.model.Persona;
 import com.app.cias.repository.PersonaRepository;
 import com.app.cias.service.dtos.PersonaResponseDTO;
 import com.app.cias.service.mappers.PersonaMapper;
-import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import static com.app.cias.excepciones.BadALertRequest.BadALertRequest;
 @Service()
 public class PersonasImplentSerivce implements PersonaService{
 	private final Logger log = LoggerFactory.getLogger(PersonasImplentSerivce.class);
@@ -34,42 +32,81 @@ public class PersonasImplentSerivce implements PersonaService{
 	}
 
 	@Override
-	public List<PersonaResponseDTO> listAll() {
-		return this.repositorio.findAll().stream().map(this.mapper::toResponseDTO).collect(Collectors.toList());
+	public ResponseEntity<List<PersonaResponseDTO>> listAll() {
+		return new ResponseEntity<>(this.repositorio.findAll().stream().map(this.mapper::toResponseDTO).collect(Collectors.toList()),HttpStatus.OK);
 	}
 
 	@Override
-	public Persona save(Persona persona) {
+	public ResponseEntity<?> save(Persona persona) {
 		// TODO Auto-generated method stub
-		persona.setPassword(bCryptPasswordEncoder.encode(persona.getPassword()));
-		return this.repositorio.save(persona);
+		Map<String, Object> response = new HashMap<>();
+		Persona creada = null;
+		try {
+			persona.setPassword(bCryptPasswordEncoder.encode(persona.getPassword()));
+			creada = this.repositorio.save(persona);
+		}catch (Exception e){
+			log.error(e.getLocalizedMessage());
+			log.error(e.getMessage());
+			log.error(e.getCause().getMessage());
+			return BadALertRequest("Ocurrio un error al guardar a la persona",
+					PersonasImplentSerivce.class.getName(),
+					e.getCause().getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("message","Persona creada");
+		response.put("persona",creada);
+		return new ResponseEntity<>(response,HttpStatus.CREATED);
+
 	}
 
 	@Override
-	public ResponseEntity<PersonaResponseDTO> findById(Long id) {
-		Persona peson = this.repositorio.findById(id)
-				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+id)));
-		return ResponseEntity.ok(this.mapper.toResponseDTO(peson));
+	public ResponseEntity<?> findById(Long id) {
+		Map<String, Object> response = new HashMap<>();
+		Persona peson = this.repositorio.findById(id).orElse(null);
+		if(peson == null) return BadALertRequest("No existe una persona con el id "+id, Persona.class.getName(),"NotFound",HttpStatus.NOT_FOUND);
+		response.put("message","Success");
+		response.put("persona", this.mapper.toResponseDTO(peson));
+		return ResponseEntity.ok(response);
 	}
 
 	@Override
-	public ResponseEntity<Persona> updatePersona(Long id, Persona detalles) {
+	public ResponseEntity<?>  updatePersona(Long id, Persona detalles) {
+
+		Persona actualizada = null;
+		Map<String, Object> response = new HashMap<>();
+
 		Persona personaVieja = this.repositorio.findById(id)
-				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+id)));
+				.orElse(null);
 
-		personaVieja.setEstatus(detalles.getEstatus());
-		personaVieja.setNombre(detalles.getNombre());
-		personaVieja.setPrimer_apellido(detalles.getPrimer_apellido());
-		personaVieja.setSegundo_apellido(detalles.getSegundo_apellido());
-		personaVieja.setTelefono(detalles.getTelefono());
-		personaVieja.setFecha_upd(ZonedDateTime.now());
-		personaVieja.setEmail(detalles.getEmail());
+		if(personaVieja == null) return BadALertRequest("No existe una persona con el id "+id,
+				Persona.class.getName(),"NotFound",HttpStatus.NOT_FOUND);
 
-		if(detalles.getPassword() != null &&  !detalles.getPassword().isEmpty())
-			personaVieja.setPassword(bCryptPasswordEncoder.encode(detalles.getPassword()));
+		try {
+			personaVieja.setEstatus(detalles.getEstatus());
+			personaVieja.setNombre(detalles.getNombre());
+			personaVieja.setPrimer_apellido(detalles.getPrimer_apellido());
+			personaVieja.setSegundo_apellido(detalles.getSegundo_apellido());
+			personaVieja.setTelefono(detalles.getTelefono());
+			personaVieja.setFecha_upd(ZonedDateTime.now());
+			personaVieja.setEmail(detalles.getEmail());
 
-		Persona actualizada = this.repositorio.save(personaVieja);
-		return ResponseEntity.ok(actualizada);
+			if(detalles.getPassword() != null &&  !detalles.getPassword().isEmpty())
+				personaVieja.setPassword(bCryptPasswordEncoder.encode(detalles.getPassword()));
+
+			actualizada = this.repositorio.save(personaVieja);
+
+		}catch (Exception e){
+			log.error(e.getLocalizedMessage());
+			log.error(e.getMessage());
+			log.error(e.getCause().getMessage());
+			return BadALertRequest("Ocurrio un error al actualziar a la persona",
+					PersonasImplentSerivce.class.getName(),
+					e.getCause().getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put("message","Persona actualizada");
+		response.put("persona",actualizada);
+		return ResponseEntity.ok(response);
 	}
 
     /*@Override
@@ -85,21 +122,34 @@ public class PersonasImplentSerivce implements PersonaService{
 	}*///Lo comente porque si borra al usuario y lo que quiero es solo desactivarlo
 
 	@Override
-	public ResponseEntity<Map<String,Boolean>>  deletePersona(Long id) {
+	public ResponseEntity<?>  deletePersona(Long id) {
+
+		Map<String, Object> response = new HashMap<>();
 		Persona personaVieja = this.repositorio.findById(id)
-				.orElseThrow(()-> new ResourceNotFoundException(("No existe una persona con el id "+ id)));
+				.orElse(null);
 
-		personaVieja.setEstatus("I");
-		this.repositorio.save(personaVieja);
+		if(personaVieja == null) return BadALertRequest("No existe una persona con el id "+id,
+				Persona.class.getName(),"NotFound",HttpStatus.NOT_FOUND);
 
-		Map<String, Boolean> respuesta = new HashMap<>();
-		respuesta.put("eliminar",Boolean.TRUE);
-		return ResponseEntity.ok(respuesta);
-	}
+		try {
+			personaVieja.setEstatus("I");
+			this.repositorio.save(personaVieja);
+		}catch (Exception e){
+			log.error(e.getLocalizedMessage());
+			log.error(e.getMessage());
+			log.error(e.getCause().getMessage());
+			return BadALertRequest("Ocurrio un error al actualziar a la persona",
+					PersonasImplentSerivce.class.getName(),
+					e.getCause().getMessage(),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+			response.put("message","Persona desactivada correctamente");
+			return ResponseEntity.ok(response);
+		}
 
-	@Override
-	public Optional<Persona> findByEmail(String email) {
-		return this.repositorio.findByEmail(email);
-	}
+		@Override
+		public Optional<Persona> findByEmail(String email) {
+			return this.repositorio.findByEmail(email);
+		}
 
 }

@@ -19,7 +19,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) {
-        AuthCredentials authCredentials = new AuthCredentials();
+        AuthCredentials authCredentials = new AuthCredentials();    
         try{
             authCredentials = new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
         }catch (IOException e){

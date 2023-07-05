@@ -1,4 +1,4 @@
-package com.app.cias.personas.controller;
+package com.app.cias.controllers;
 
 import com.app.cias.model.Persona;
 import com.app.cias.service.PersonaService;
@@ -21,29 +21,29 @@ public class PersonasController {
 	private PersonaService servicio;
 	
 	@GetMapping("/personas")
-	public List<PersonaResponseDTO> ListaAll(){
+	public ResponseEntity<?> ListaAll(){
 		log.info("Get All Request");
 		return servicio.listAll();
 	}
 	
 	@PostMapping("/personas")
-	public Persona save(@RequestBody Persona persona) {
+	public ResponseEntity<?> save(@RequestBody Persona persona) {
 		return servicio.save(persona);
 	}
 	
 	@GetMapping("/personas/{id}")
-	public ResponseEntity<PersonaResponseDTO> getById(@PathVariable long id){
+	public ResponseEntity<?> getById(@PathVariable long id){
 		return servicio.findById(id);
 	}
 	
 	@PutMapping("/personas/{id}")
-	public ResponseEntity<Persona> updatePersona(@PathVariable long id,@RequestBody Persona persona ){
+	public ResponseEntity<?> pdatePersona(@PathVariable long id,@RequestBody Persona persona ){
 		return servicio.updatePersona(id, persona);
 	}
 	
 	
 	@DeleteMapping("/personas/{id}")
-	public ResponseEntity<Map<String,Boolean>> deletePersona(@PathVariable long id){
+	public ResponseEntity<?> deletePersona(@PathVariable long id){
 		return servicio.deletePersona(id);
 	}
 	
