@@ -14,9 +14,10 @@ public class BadALertRequest{
 
     public static ResponseEntity<?> BadALertRequest(String mensaje, String clase, String causa, HttpStatus estatus){
         Map<String,Object> response = new HashMap<>();
-        response.put("message",mensaje);
-        response.put("cause",causa);
-        response.put("entity",clase);
+        response.put("Error",causa + " Entity: " + clase);
+        response.put("Status",estatus);
+        response.put("StatusCode",estatus.value());
+        response.put("message:",mensaje);
 
         log.error(response.toString());
 

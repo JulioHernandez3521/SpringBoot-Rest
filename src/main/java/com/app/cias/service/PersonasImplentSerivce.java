@@ -41,18 +41,19 @@ public class PersonasImplentSerivce implements PersonaService{
 		// TODO Auto-generated method stub
 		Map<String, Object> response = new HashMap<>();
 		Persona creada = null;
-		try {
+//		try {
 			persona.setPassword(bCryptPasswordEncoder.encode(persona.getPassword()));
 			creada = this.repositorio.save(persona);
-		}catch (Exception e){
-			log.error(e.getLocalizedMessage());
-			log.error(e.getMessage());
-			log.error(e.getCause().getMessage());
-			return BadALertRequest("Ocurrio un error al guardar a la persona",
-					PersonasImplentSerivce.class.getName(),
-					e.getCause().getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+//		}catch (Exception e){
+//			log.error(e.getClass().getName());
+//			log.error(e.getLocalizedMessage());
+//			log.error(e.getMessage());
+//			log.error(e.getCause().getMessage());
+//			return BadALertRequest("Ocurrio un error al guardar a la persona",
+//					PersonasImplentSerivce.class.getName(),
+//					e.getCause().getMessage(),
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
 		response.put("message","Persona creada");
 		response.put("persona",creada);
 		return new ResponseEntity<>(response,HttpStatus.CREATED);
@@ -81,29 +82,29 @@ public class PersonasImplentSerivce implements PersonaService{
 		if(personaVieja == null) return BadALertRequest("No existe una persona con el id "+id,
 				Persona.class.getName(),"NotFound",HttpStatus.NOT_FOUND);
 
-		try {
-			personaVieja.setEstatus(detalles.getEstatus());
-			personaVieja.setNombre(detalles.getNombre());
-			personaVieja.setPrimer_apellido(detalles.getPrimer_apellido());
-			personaVieja.setSegundo_apellido(detalles.getSegundo_apellido());
-			personaVieja.setTelefono(detalles.getTelefono());
-			personaVieja.setFecha_upd(ZonedDateTime.now());
-			personaVieja.setEmail(detalles.getEmail());
+//		try {
+		personaVieja.setEstatus(detalles.getEstatus());
+		personaVieja.setNombre(detalles.getNombre());
+		personaVieja.setPrimer_apellido(detalles.getPrimer_apellido());
+		personaVieja.setSegundo_apellido(detalles.getSegundo_apellido());
+		personaVieja.setTelefono(detalles.getTelefono());
+		personaVieja.setFecha_upd(ZonedDateTime.now());
+		personaVieja.setEmail(detalles.getEmail());
 
-			if(detalles.getPassword() != null &&  !detalles.getPassword().isEmpty())
-				personaVieja.setPassword(bCryptPasswordEncoder.encode(detalles.getPassword()));
+		if(detalles.getPassword() != null &&  !detalles.getPassword().isEmpty())
+			personaVieja.setPassword(bCryptPasswordEncoder.encode(detalles.getPassword()));
 
-			actualizada = this.repositorio.save(personaVieja);
+		actualizada = this.repositorio.save(personaVieja);
 
-		}catch (Exception e){
-			log.error(e.getLocalizedMessage());
-			log.error(e.getMessage());
-			log.error(e.getCause().getMessage());
-			return BadALertRequest("Ocurrio un error al actualziar a la persona",
-					PersonasImplentSerivce.class.getName(),
-					e.getCause().getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+//		}catch (Exception e){
+//			log.error(e.getLocalizedMessage());
+//			log.error(e.getMessage());
+//			log.error(e.getCause().getMessage());
+//			return BadALertRequest("Ocurrio un error al actualziar a la persona",
+//					PersonasImplentSerivce.class.getName(),
+//					e.getCause().getMessage(),
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
 		response.put("message","Persona actualizada");
 		response.put("persona",actualizada);
 		return ResponseEntity.ok(response);
@@ -131,18 +132,18 @@ public class PersonasImplentSerivce implements PersonaService{
 		if(personaVieja == null) return BadALertRequest("No existe una persona con el id "+id,
 				Persona.class.getName(),"NotFound",HttpStatus.NOT_FOUND);
 
-		try {
-			personaVieja.setEstatus("I");
-			this.repositorio.save(personaVieja);
-		}catch (Exception e){
-			log.error(e.getLocalizedMessage());
-			log.error(e.getMessage());
-			log.error(e.getCause().getMessage());
-			return BadALertRequest("Ocurrio un error al actualziar a la persona",
-					PersonasImplentSerivce.class.getName(),
-					e.getCause().getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+//		try {
+		personaVieja.setEstatus("I");
+		this.repositorio.save(personaVieja);
+//		}catch (Exception e){
+//			log.error(e.getLocalizedMessage());
+//			log.error(e.getMessage());
+//			log.error(e.getCause().getMessage());
+//			return BadALertRequest("Ocurrio un error al actualziar a la persona",
+//					PersonasImplentSerivce.class.getName(),
+//					e.getCause().getMessage(),
+//					HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
 			response.put("message","Persona desactivada correctamente");
 			return ResponseEntity.ok(response);
 		}

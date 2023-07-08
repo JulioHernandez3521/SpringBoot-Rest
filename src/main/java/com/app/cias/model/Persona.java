@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import jakarta.persistence.*;
 
 @Entity()
-@Table(name = "Personas")
+@Table(name = "PERSONAS")
 public class Persona {
 	
 	@Id
@@ -20,13 +20,12 @@ public class Persona {
 
 	@Column(name ="segundo_apellido", length = 100, nullable = false )
 	private String segundo_apellido;
-
 	@Column(name ="telefono", length = 10, nullable = false )
 	private String telefono;
 
 	@Column(name ="estatus", length = 1, nullable = false )
 	private String estatus;
-	@Column(name ="email", length = 100, nullable = false, unique = true)
+	@Column(name ="email",unique = true, length = 100, nullable = false)
 	private String email;
 	@Column(name ="password", nullable = false)
 	private String password;
