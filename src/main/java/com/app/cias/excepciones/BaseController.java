@@ -54,12 +54,12 @@ public class BaseController {
         log.error(ex.getMessage());
         log.error(ex.getEntityName());
         log.error(ex.getLocalizedMessage());
-        errors.put("Property:",ex.getPropertyName());
-        errors.put("Entity:",ex.getEntityName());
-        errors.put("Error:",ex.getMessage());
-        errors.put("Status:",HttpStatus.BAD_REQUEST);
-        errors.put("StatusCode:",HttpStatus.BAD_REQUEST.value());
-        errors.put("message:",ex.getLocalizedMessage());
+        errors.put("Property",ex.getPropertyName());
+        errors.put("Entity",ex.getEntityName());
+        errors.put("Error",ex.getMessage());
+        errors.put("Status",HttpStatus.BAD_REQUEST);
+        errors.put("StatusCode",HttpStatus.BAD_REQUEST.value());
+        errors.put("message",ex.getLocalizedMessage());
         return errors;
     }
 
@@ -70,10 +70,10 @@ public class BaseController {
         log.error("Captura de errores en Modelo");
         log.error(ex.getMessage());
         log.error(ex.getLocalizedMessage());
-        errors.put("Error:",ex.getMessage());
-        errors.put("Status:",HttpStatus.BAD_REQUEST);
-        errors.put("StatusCode:",HttpStatus.BAD_REQUEST.value());
-        errors.put("message:",ex.getLocalizedMessage());
+        errors.put("Error",ex.getMessage());
+        errors.put("Status",HttpStatus.BAD_REQUEST);
+        errors.put("StatusCode",HttpStatus.BAD_REQUEST.value());
+        errors.put("message",ex.getLocalizedMessage());
 
         return errors;
     }
@@ -86,10 +86,10 @@ public class BaseController {
         log.error(ex.getMessage());
         log.error(ex.getLocalizedMessage());
         log.error(ex.getClass().getName());
-        errors.put("Error:",ex.getMessage());
-        errors.put("Status:",HttpStatus.INTERNAL_SERVER_ERROR);
-        errors.put("StatusCode:",HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errors.put("message:",ex.getLocalizedMessage());
+        errors.put("Error",ex.getMessage());
+        errors.put("Status",HttpStatus.INTERNAL_SERVER_ERROR);
+        errors.put("StatusCode",HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errors.put("message",ex.getLocalizedMessage());
         return errors;
     }
 
